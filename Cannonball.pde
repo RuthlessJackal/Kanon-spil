@@ -7,10 +7,14 @@ class Cannonball
  float radius;
  
  boolean draw;
+ boolean hasHit;
+ 
+ 
  
   Cannonball(PVector locatio, PVector force, float r)
   {
-   draw = true;
+   hasHit = false;
+    draw = true;
     t = 0;
     startLocation = locatio;
     radius = r;
@@ -28,7 +32,17 @@ class Cannonball
     
     stroke(30,255,0);   
     
-    float xPos = startLocation.x + power*t*cos(angle*degToRad);
+    float xPos = startLocation.x;
+    
+    if(hasHit == true)
+    {
+     xPos -= power*t*cos(angle*degToRad);
+    }
+    else
+    {
+      xPos += power*t*cos(angle*degToRad);
+    }
+    
     float yPos = startLocation.y - (power*t*sin(angle*degToRad))-(0.5*g*(t*t));
     
     circle(xPos,yPos,radius);
@@ -46,9 +60,22 @@ class Cannonball
      if(yPos > targetYPos - heightCheck && yPos < targetYPos + heightCheck)
      {
       //ramt target
-      print("RAMT");
       
-      return true;
+      if(hasHit == false)
+      {
+        startLocation = new PVector(startLocation.x+power*t*cos(angle*degToRad),startLocation.y - (power*t*sin(angle*degToRad))-(0.5*g*(t*t)));
+        t = 0;
+        power *= 0.3;
+        hasHit = true;
+        
+        
+        
+        return true;
+      }
+      
+      
+      
+      
      
        
        
@@ -56,19 +83,19 @@ class Cannonball
       
     }
     
-    if(xPos > width+radius*2)
+    if(xPos > width+radius*5)
     {
       //slet objekt
       
-      print("DØD");
+      draw = false;
       
     }
     
-    if(yPos > height+radius*2)
+    if(yPos > height+radius*5)
     {
       //slet objekt
       
-      print("DØD");
+      draw = false;
       
     }
     
