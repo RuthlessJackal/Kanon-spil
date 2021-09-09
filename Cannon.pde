@@ -10,7 +10,7 @@ class cannon
   PImage cannonHead;
   PImage cannonWheel;
 
-float tConstant = 0.01;
+float tConstant = 0.4;
 ArrayList<Cannonball> cannonballs = new ArrayList<Cannonball>();
 
 float shotsPerSec;
@@ -39,21 +39,24 @@ float localTime;
     if (Baby == true) {
       
     
-      float y = height - (((sin(targetCurrentRad + (30*targetVelocity * tConstant)) + 1) * 0.5)*500);
+      float y = height - (((sin(targetCurrentRad + (30*targetVelocity * tConstant)) + 1) * 0.5)*500) - 50;
       
       float vx = (960 / tConstant) - (location.x / tConstant); 
-      float vy = (-9.81*30*tConstant*tConstant + 2 * y - 2 * (height - location.y)) / (2*tConstant);
+      
+      
+      
+      float vy = (9.81*30*tConstant*tConstant + 2 * y - 2 * (height - location.y)) / (2*tConstant);
       
       
 
       push();
       translate(location.x, location.y);
       imageMode(CENTER);
-      rotate(atan(vy/vx));
+      rotate(atan(-vy/vx));
       image(cannonHead, 0, 0, size_.x, size_.y);
       pop(); 
       
-      //Babycannons auto_aim function is to be inserted here
+      //Babycannons auto_aim function is to be inserted here   
     } else {
       aim_angle = (atan((mouseY-location.y)/(mouseX-location.x)));
       push();
@@ -67,12 +70,15 @@ float localTime;
 
   void ShootBabyCannon(float targetCurrentRad, float targetVelocity)
   {
-    float y = height - (((sin(targetCurrentRad + (30*targetVelocity * tConstant)) + 1) * 0.5)*500);
+    float y = height - (((sin(targetCurrentRad + (30*targetVelocity * tConstant)) + 1) * 0.5)*500) - 50;
       
       float vx = (960 / tConstant) - (location.x / tConstant); 
-      float vy = (-9.81*30*tConstant*tConstant + 2 * y - 2 * height - location.y) / (2*tConstant);
+      
+      
+      
+      float vy = (9.81*30*tConstant*tConstant + 2 * y - 2 * (height - location.y)) / (2*tConstant);
   
-  float theta = atan(vy/vx);
+  float theta = atan(-vy/vx);
   
     float kons = 50;
     cannonballs.add(new Cannonball(new PVector(cos(theta)*kons + location.x, sin(theta)*kons + location.y), new PVector(vx,vy), 20));
