@@ -10,7 +10,7 @@ class cannon
   PImage cannonHead;
   PImage cannonWheel;
 
-float tConstant = 0.4;
+float tConstant = 2;
 ArrayList<Cannonball> cannonballs = new ArrayList<Cannonball>();
 
 float shotsPerSec;
@@ -39,20 +39,27 @@ float localTime;
     if (Baby == true) {
       
     
-      float y = height - (((sin(targetCurrentRad + (30*targetVelocity * tConstant)) + 1) * 0.5)*500) - 50;
+      float y = height - (((sin(targetCurrentRad + (30*targetVelocity * tConstant)) + 1) * 0.5)*500) - 47;
       
-      float vx = (960 / tConstant) - (location.x / tConstant); 
+      float vx = ((960) / tConstant) - (location.x / tConstant); 
       
       
       
       float vy = (9.81*30*tConstant*tConstant + 2 * y - 2 * (height - location.y)) / (2*tConstant);
       
+      float kons = 50;
+      float theta = atan((-vy/vx));
       
+      vx = ((960) / tConstant) - ((cos(theta)*kons + location.x) / tConstant); 
+      
+      
+      
+      vy = (9.81*30*tConstant*tConstant + 2 * y - 2 * (height - (sin(theta)*kons + location.y))) / (2*tConstant);
 
       push();
       translate(location.x, location.y);
       imageMode(CENTER);
-      rotate(atan(-vy/vx));
+      rotate(theta);
       image(cannonHead, 0, 0, size_.x, size_.y);
       pop(); 
       
@@ -70,18 +77,23 @@ float localTime;
 
   void ShootBabyCannon(float targetCurrentRad, float targetVelocity)
   {
-    float y = height - (((sin(targetCurrentRad + (30*targetVelocity * tConstant)) + 1) * 0.5)*500) - 50;
+    float y = height - (((sin(targetCurrentRad + (30*targetVelocity * tConstant)) + 1) * 0.5)*500) - 47;
       
-      float vx = (960 / tConstant) - (location.x / tConstant); 
+      float vx = ((960) / tConstant) - (location.x / tConstant); 
       
       
       
       float vy = (9.81*30*tConstant*tConstant + 2 * y - 2 * (height - location.y)) / (2*tConstant);
-  
-  float theta = atan(-vy/vx);
-  
-    float kons = 50;
-    cannonballs.add(new Cannonball(new PVector(cos(theta)*kons + location.x, sin(theta)*kons + location.y), new PVector(vx,vy), 20));
+      
+      float kons = 50;
+      float theta = atan((-vy/vx));
+      
+      vx = ((960) / tConstant) - ((cos(theta)*kons + location.x) / tConstant); 
+      
+      
+      
+      vy = (9.81*30*tConstant*tConstant + 2 * y - 2 * (height - (sin(theta)*kons + location.y))) / (2*tConstant);
+    cannonballs.add(new Cannonball(new PVector(cos(theta)*kons + location.x, sin(theta)*kons + location.y), new PVector(vx,vy), 15));
     
   }
 
