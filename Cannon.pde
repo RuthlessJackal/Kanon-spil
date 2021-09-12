@@ -1,5 +1,3 @@
-//Opløsningen er 1000*618
-// cannon c1 = new cannon(false,100,500,100,35,80);
 
 class cannon
 {
@@ -10,15 +8,16 @@ class cannon
   PImage cannonHead;
   PImage cannonWheel;
 
-float tConstant = 2;
+float tConstant = 3;
 ArrayList<Cannonball> cannonballs = new ArrayList<Cannonball>();
 
 float shotsPerSec;
 float localTime;
 
 
-  cannon(Boolean Babycannon, float x, float y, float w, float h, float k, float shotsPerSecc)
+  cannon(Boolean Babycannon, float x, float y, float w, float h, float k, float shotsPerSecc, float _tConstant)
   {
+    tConstant = _tConstant;
     shotsPerSec = shotsPerSecc;
     localTime = 0;
     location = new PVector(x, y);
@@ -39,7 +38,7 @@ float localTime;
     if (Baby == true) {
       
     
-      float y = height - (((sin(targetCurrentRad + (30*targetVelocity * tConstant)) + 1) * 0.5)*500) - 47;
+      float y = height - (((sin(targetCurrentRad + (30*targetVelocity * tConstant)) + 1) * 0.5)*450)-50;
       
       float vx = ((960) / tConstant) - (location.x / tConstant); 
       
@@ -48,18 +47,27 @@ float localTime;
       float vy = (9.81*30*tConstant*tConstant + 2 * y - 2 * (height - location.y)) / (2*tConstant);
       
       float kons = 50;
-      float theta = atan((-vy/vx));
+      float theta = 0;
       
-      vx = ((960) / tConstant) - ((cos(theta)*kons + location.x) / tConstant); 
+      for(int i = 0; i < 3;i++)
+      {
+        theta = atan((-vy/vx));
+        vx = ((960) / tConstant) - ((cos(theta)*kons + location.x) / tConstant); 
       
       
       
       vy = (9.81*30*tConstant*tConstant + 2 * y - 2 * (height - (sin(theta)*kons + location.y))) / (2*tConstant);
+      }
+      
+      
+      
+      
+      
 
       push();
       translate(location.x, location.y);
       imageMode(CENTER);
-      rotate(theta);
+      rotate(atan(-vy/vx));
       image(cannonHead, 0, 0, size_.x, size_.y);
       pop(); 
       
@@ -77,7 +85,7 @@ float localTime;
 
   void ShootBabyCannon(float targetCurrentRad, float targetVelocity)
   {
-    float y = height - (((sin(targetCurrentRad + (30*targetVelocity * tConstant)) + 1) * 0.5)*500) - 47;
+    float y = height - (((sin(targetCurrentRad + (30*targetVelocity * tConstant)) + 1) * 0.5)*450)-50;
       
       float vx = ((960) / tConstant) - (location.x / tConstant); 
       
@@ -86,18 +94,23 @@ float localTime;
       float vy = (9.81*30*tConstant*tConstant + 2 * y - 2 * (height - location.y)) / (2*tConstant);
       
       float kons = 50;
-      float theta = atan((-vy/vx));
+      float theta = 0;
       
-      vx = ((960) / tConstant) - ((cos(theta)*kons + location.x) / tConstant); 
+      for(int i = 0; i < 3;i++)
+      {
+        theta = atan((-vy/vx));
+        vx = ((960) / tConstant) - ((cos(theta)*kons + location.x) / tConstant); 
       
       
       
       vy = (9.81*30*tConstant*tConstant + 2 * y - 2 * (height - (sin(theta)*kons + location.y))) / (2*tConstant);
+      }
+      
     cannonballs.add(new Cannonball(new PVector(cos(theta)*kons + location.x, sin(theta)*kons + location.y), new PVector(vx,vy), 15));
     
   }
 
-  void Display(float targetY, float targetCurrentRad, float targetVelocity) {
+  int Display(float targetY, float targetCurrentRad, float targetVelocity) {
     
     if(Baby == true)
     {
@@ -113,12 +126,16 @@ float localTime;
       ShootBabyCannon(targetCurrentRad,targetVelocity);
     }
     
-    }
     
+    }
+    int x2 = 0;
     for (int i = 0; i < cannonballs.size(); i++)
     {
      
-      cannonballs.get(i).Loop(targetY);
+      if(cannonballs.get(i).Loop(targetY))
+      {
+        x2 += 1;
+      }
       
     }
     
@@ -137,5 +154,7 @@ float localTime;
     
     //cannon wheel is drawn with a fixed size
     pop();
+    
+    return x2;
   }
 }
